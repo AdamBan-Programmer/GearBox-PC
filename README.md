@@ -25,9 +25,15 @@ It's a basic driver for gamepads. You can make your own gearbox using simple and
 
 4.Effect
 ![gearBox- Effect](https://github.com/AdamBan-Programmer/gearBox/assets/137770072/8947f334-176f-46f2-9205-0f0ca665ae94)
+![effect in ets](https://github.com/AdamBan-Programmer/gearBox/assets/137770072/72483192-e802-4abb-b903-5a585207b3f2)
 
 
 
+5. Set path to Euro Truck Simulator 2 or to a shortcut
+![path to ets](https://github.com/AdamBan-Programmer/gearBox/assets/137770072/886b0a69-4072-4399-9662-b4d1192a3267)
+
+6. Euro Truck Simulator 2
+![run ets2](https://github.com/AdamBan-Programmer/gearBox/assets/137770072/12804153-29a1-4940-96e2-4bbc08b5efc1)
 
 
 # Requirements:
