@@ -2,7 +2,7 @@
 It's a basic driver for gamepads. You can make your own gearbox using simple and cheap gamepad.This application allows you to calibrate your gamepad to set single gears easly. If you don't want to buy original gearbox, this app will help you to enjoy a game like in real car. This app works great with Euro Truck Simulator 2.
 
 # About:
-- I created this app to add a simple gearbox into a game without spending a lot of money.It makes a game more similar to real car. I used a JINPUT library to detect and implement controllers into app. I used basic java packages like Swing and Robot as well.
+- I created this app to add a simple gearbox into a game without spending a lot of money.It makes a game more similar to real car. I used a JINPUT library to detect and implement controllers into app. I used basic java packages like Swing and Robot as well.I decided to store profiles and settings in local files by serialization.
 
 # How to use: 
 1. Create new profile.
@@ -17,8 +17,15 @@ It's a basic driver for gamepads. You can make your own gearbox using simple and
 1. Steps.
 ![gearBox-How to use](https://github.com/AdamBan-Programmer/gearBox/assets/137770072/af457eb8-46bc-495e-87e5-45b7fe254775)
 
-2.Effect
-![gearBox- Effect](https://github.com/AdamBan-Programmer/gearBox/assets/137770072/a8269d81-e151-435b-afe5-a52cbaa90583)
+2. Gear: 1, Bind: 1
+![gear calibration1](https://github.com/AdamBan-Programmer/gearBox/assets/137770072/8bb94083-ba15-4f63-9c1c-bfb2409d1d75)
+
+3. Gear: 1, bind: 2
+![gear calibration2](https://github.com/AdamBan-Programmer/gearBox/assets/137770072/16a694bd-1a47-425f-b156-e5905425af86)
+
+4.Effect
+![gearBox- Effect](https://github.com/AdamBan-Programmer/gearBox/assets/137770072/8947f334-176f-46f2-9205-0f0ca665ae94)
+
 
 
 
