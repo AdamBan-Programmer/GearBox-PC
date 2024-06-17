@@ -1,8 +1,8 @@
 # GearBox
-It's a basic driver for gamepads. You can make your own gearbox using simple and cheap gamepad.This application allows you to calibrate your gamepad to set single gears easly. If you don't want to buy original gearbox, this app will help you to enjoy a game like in real car. This app works great with Euro Truck Simulator 2.
+It's a basic driver for gamepads. You can make your own gearbox using simple and cheap gamepad. This application allows you to calibrate your gamepad to set single gears easly. If you don't want to buy original gearbox, this app will help you to enjoy a game like in real car. This app works great with Euro Truck Simulator 2.
 
 # About:
-- I created this app to add a simple gearbox into a game without spending a lot of money.It makes a game more similar to real car. I used a JINPUT library to detect and implement controllers into app. I used basic java packages like Swing and Robot as well.I decided to store profiles and settings in local files by serialization.
+- I created this app to add a simple gearbox into a game without spending a lot of money. It makes a game more similar to real car. I used a JINPUT library to detect and implement controllers into app. I used basic java packages like Swing and Robot as well. I decided to store profiles and settings in local files by serialization.
 
 # How to use: 
 1. Create new profile.
