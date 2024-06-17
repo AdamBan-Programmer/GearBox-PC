@@ -388,9 +388,11 @@ public class MainWindow implements WindowInterface {
                         try {
                             gearBoxStatus = AppStatusEnum.STOPPED;
                             updateProfileData();
+                            if(profilesController.getCurrentUsingProfile().getName().isEmpty()) {
                             profilesController.setProfileNameRequest();
-                            while(!isProfilePreparedToSave()) {
-                                profilesController.renameProfileRequest("This name is incorrect. Set different name!");
+                                while (!isProfilePreparedToSave()) {
+                                    profilesController.renameProfileRequest("This name is incorrect. Set different name!");
+                                }
                             }
                             String newProfileName = profilesController.getCurrentUsingProfile().getName();
                             profileName_LB.setText("profile: " + "'" + newProfileName + "'");
