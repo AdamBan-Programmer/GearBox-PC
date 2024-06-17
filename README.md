@@ -13,7 +13,7 @@ It's a basic driver for gamepads. You can make your own gearbox using simple and
 7. You can use 'run: Euro Truck Simulator 2' button to start a game instantly. Firstly you have to set a path to a Euro Truck Simulator 2.exe or to a shortcut in Settings.
 8. To start. Select your profile and click 'START'
 
-# Example
+# Example:
 1. Steps.
 ![gearBox-How to use](https://github.com/AdamBan-Programmer/gearBox/assets/137770072/af457eb8-46bc-495e-87e5-45b7fe254775)
 
@@ -34,6 +34,20 @@ It's a basic driver for gamepads. You can make your own gearbox using simple and
 
 6. Euro Truck Simulator 2
 ![run ets2](https://github.com/AdamBan-Programmer/gearBox/assets/137770072/12804153-29a1-4940-96e2-4bbc08b5efc1)
+
+# How to download:
+1. click 'code' and 'download ZIP'
+
+2. unpack 7zip
+
+3. open project in Intellij
+
+4. build artefact
+
+5. find your jar file and create bash file on desktop.
+
+![gearbox bash](https://github.com/AdamBan-Programmer/gearBox/assets/137770072/8a786d24-5986-4ba8-ac03-f461424aefe4)
+
 
 
 # Requirements:
