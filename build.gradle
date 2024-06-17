@@ -1,0 +1,53 @@
+plugins {
+    id 'java'
+}
+
+group = 'org.example'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation platform('org.junit:junit-bom:5.9.1')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+}
+
+test {
+    useJUnitPlatform()
+}
+project.ext.lwjglVersion = "3.3.2"
+project.ext.lwjglNatives = "natives-windows"
+
+dependencies {
+    implementation 'org.lwjgl.lwjgl:lwjgl:2.9.3'
+    implementation 'org.lwjgl.lwjgl:lwjgl_util:2.9.3'
+    implementation 'net.java.dev.jna:jna:5.9.0'
+    implementation 'net.java.dev.jna:jna-platform:5.9.0'
+    implementation group: 'net.java.jinput', name: 'jinput', version: '2.0.9'
+    implementation group: 'com.google.code.gson', name: 'gson', version: '2.11.0'
+    implementation group: 'org.testfx', name: 'testfx-core', version: '4.0.18'
+
+    testImplementation group: 'junit', name: 'junit', version: '4.13.2'
+
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src/main/java']
+        }
+        resources {
+            srcDirs = ['src/main/resources']
+        }
+    }
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'org.example.MainWindow'
+    }
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    exclude 'META-INF/*.RSA', 'META-INF/*.SF','META-INF/*.DSA'
+}
