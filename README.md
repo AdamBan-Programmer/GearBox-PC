@@ -42,7 +42,7 @@ It's a basic driver for gamepads. You can make your own gearbox using simple and
 
 3. open project in Intellij
 
-4. build artefact
+4. build an artefact
 
 5. find your jar file and create bash file on desktop.
 
