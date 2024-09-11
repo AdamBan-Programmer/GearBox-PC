@@ -1,22 +1,28 @@
 package org.example.Settings;
 
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.io.Serializable;
 
-public class AppSettings implements Serializable {
+@Getter
+@Setter
+public final class AppSettings implements Serializable {
 
     private String etsPath;
 
     private static AppSettings currentAppSettings = null;
 
-    public AppSettings(String etsPath) {
+    private AppSettings(String etsPath) {
         this.etsPath = etsPath;
     }
 
-    public AppSettings() {
+    public static void loadSettings(AppSettings newAppSettings)
+    {
+        currentAppSettings = newAppSettings;
     }
-
-    public AppSettings getCurrentAppSettings() {
+    public static AppSettings getInstance() {
 
         if(currentAppSettings == null)
         {
@@ -24,14 +30,4 @@ public class AppSettings implements Serializable {
         }
         return currentAppSettings;
     }
-
-    public void setCurrentAppSettings(AppSettings newAppSettings) {
-        currentAppSettings = newAppSettings;
-    }
-
-
-    public String getEtsPath() {
-        return this.etsPath;
-    }
-
 }

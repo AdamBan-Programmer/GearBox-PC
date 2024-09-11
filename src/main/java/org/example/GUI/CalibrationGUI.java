@@ -1,4 +1,4 @@
-package org.example.Windows;
+package org.example.GUI;
 
 import net.java.games.input.Component;
 import net.java.games.input.Controller;
@@ -9,18 +9,17 @@ import org.example.Utils.Gamepad;
 import org.example.Utils.Range;
 import org.example.Utils.ScaleLayout;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-public class CalibrationWindow implements WindowInterface {
-    static ScaleLayout scallingController = new ScaleLayout();
-    static Profile profileController = new Profile();
-    static Gamepad gamepadController = new Gamepad();
-    static MainWindow mainWindowController = new MainWindow();
+public class CalibrationGUI extends JDialog implements CreatorGUI {
 
-    static JFrame calibrationFrame = new JFrame();
+    static ScaleLayout scallingController = new ScaleLayout();
+    static Gamepad gamepadController = new Gamepad();
+
     static JLabel cfgName_LB = new JLabel("Set name of config");
     static JTextField cfgName_TF = new JTextField();
     static JLabel cfgValue_LB = new JLabel("Set value");
@@ -40,65 +39,72 @@ public class CalibrationWindow implements WindowInterface {
     private static int bindIndex;
     private static CalibrationStatusEnum detectingStatus = CalibrationStatusEnum.STOPPED;
 
-    // opens config settings
-    public void openConfigPanelWindow(ConfigPanel cfgPanel) {
-
-        bindIndex =0;
+    public CalibrationGUI(ConfigPanel cfgPanel) {
         currentConfigPanel = cfgPanel;
-        createWindow();
-        setWindowIcon();
-        addControlsIntoPanel();
-        setControlsToListeners();
-        setControlsParams();
+        setGuiParams();
+        setGuiComponentsParams();
+        addGuiComponents();
+        addGuiComponentsToListeners();
+        setGuiIcon();
 
         // Window settings
         setConfigValuesIntoControls();
-        calibrationFrame.setVisible(true);
-    }
-
-    //window default settings
-    public void createWindow() {
-        Point screenSize = scallingController.getWindowSize(20, 30);
-        calibrationFrame.setSize(screenSize.x, screenSize.y);
-        calibrationFrame.setResizable(false);
-        calibrationFrame.setTitle("Config:");
-        calibrationFrame.setLocationRelativeTo(null);
-        calibrationFrame.setLayout(null);
-        calibrationFrame.getContentPane().setBackground(Color.decode("#C0C0C0"));
+        this.setVisible(true);
+        bindIndex =0;
     }
 
     @Override
-    public void setWindowIcon() {
-        try {
-            ImageIcon icon = new ImageIcon("C:/Users/Adam/IdeaProjects/GearBoxBinder/src/main/resources/images/AppImage.png");
-            calibrationFrame.setIconImage(icon.getImage());
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+    public void setGuiParams() {
+        Point screenSize = scallingController.getWindowSize(20, 30);
+        this.setSize(screenSize.x, screenSize.y);
+        this.setResizable(false);
+        this.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
+        this.setTitle("Config:");
+        this.setLocationRelativeTo(null);
+        this.setLayout(null);
+        this.getContentPane().setBackground(Color.decode("#C0C0C0"));
     }
 
-    //add controls into panel
-    public void addControlsIntoPanel() {
+    @Override
+    public void setGuiComponentsParams() {
+        scallingController.setScallingParams(78, 6, 50, 5, 2, cfgName_LB, this);
+        scallingController.setScallingParams(78, 6, 70, 11, 2, cfgName_TF, this);
+        scallingController.setScallingParams(78, 6, 50, 18, 2, cfgValue_LB, this);
+        scallingController.setScallingParams(78, 6, 70, 24, 2, cfgValue_TF, this);
+        scallingController.setScallingParams(50, 6, 50, 48, 10, detectedControl_LB, this);
+        scallingController.setScallingParams(20, 7, 60, 35, 20, cfgBindPageNumber_LB, this);
+        scallingController.setScallingParams(15, 6, 50, 35, 5, previousBind_BT, this);
+        scallingController.setScallingParams(15, 6, 50, 35, 40, nextBind_BT, this);
+        scallingController.setScallingParams(30, 6, 50, 44, 65, detectMin_BT, this);
+        scallingController.setScallingParams(30, 6, 50, 51, 65, detectMax_BT, this);
+        scallingController.setScallingParams(30, 6, 50, 58, 65, stopDetecting_BT, this);
+        scallingController.setScallingParams(30, 6, 50, 65, 65, resetBind_BT, this);
+        scallingController.setScallingParams(50, 6, 50, 54, 10, cfgActivationValue_LB, this);
+        scallingController.setScallingParams(30, 10, 40, 75, 34, saveCfg_BT, this);
+        cfgBindPageNumber_LB.setHorizontalAlignment(SwingConstants.CENTER);
+    }
+
+    @Override
+    public void addGuiComponents() {
         //adds controls into panel
-        calibrationFrame.add(cfgName_LB);
-        calibrationFrame.add(cfgName_TF);
-        calibrationFrame.add(cfgValue_LB);
-        calibrationFrame.add(cfgValue_TF);
-        calibrationFrame.add(detectedControl_LB);
-        calibrationFrame.add(detectMin_BT);
-        calibrationFrame.add(detectMax_BT);
-        calibrationFrame.add(resetBind_BT);
-        calibrationFrame.add(stopDetecting_BT);
-        calibrationFrame.add(cfgActivationValue_LB);
-        calibrationFrame.add(previousBind_BT);
-        calibrationFrame.add(nextBind_BT);
-        calibrationFrame.add(cfgBindPageNumber_LB);
-        calibrationFrame.add(saveCfg_BT);
+        this.add(cfgName_LB);
+        this.add(cfgName_TF);
+        this.add(cfgValue_LB);
+        this.add(cfgValue_TF);
+        this.add(detectedControl_LB);
+        this.add(detectMin_BT);
+        this.add(detectMax_BT);
+        this.add(resetBind_BT);
+        this.add(stopDetecting_BT);
+        this.add(cfgActivationValue_LB);
+        this.add(previousBind_BT);
+        this.add(nextBind_BT);
+        this.add(cfgBindPageNumber_LB);
+        this.add(saveCfg_BT);
     }
 
-    //sets events listeners
-    public void setControlsToListeners()
-    {
+    @Override
+    public void addGuiComponentsToListeners() {
         setMouseClickListener(previousBind_BT);
         setMouseClickListener(nextBind_BT);
         setMouseClickListener(detectMin_BT);
@@ -107,24 +113,14 @@ public class CalibrationWindow implements WindowInterface {
         setMouseClickListener(resetBind_BT);
         setMouseClickListener(saveCfg_BT);
     }
-
-    //sets controls params
-    public void setControlsParams() {
-        scallingController.setScallingParams(78, 6, 50, 5, 2, cfgName_LB, calibrationFrame);
-        scallingController.setScallingParams(78, 6, 70, 11, 2, cfgName_TF, calibrationFrame);
-        scallingController.setScallingParams(78, 6, 50, 18, 2, cfgValue_LB, calibrationFrame);
-        scallingController.setScallingParams(78, 6, 70, 24, 2, cfgValue_TF, calibrationFrame);
-        scallingController.setScallingParams(50, 6, 50, 48, 10, detectedControl_LB, calibrationFrame);
-        scallingController.setScallingParams(20, 7, 60, 35, 20, cfgBindPageNumber_LB, calibrationFrame);
-        scallingController.setScallingParams(15, 6, 50, 35, 5, previousBind_BT, calibrationFrame);
-        scallingController.setScallingParams(15, 6, 50, 35, 40, nextBind_BT, calibrationFrame);
-        scallingController.setScallingParams(30, 6, 50, 44, 65, detectMin_BT, calibrationFrame);
-        scallingController.setScallingParams(30, 6, 50, 51, 65, detectMax_BT, calibrationFrame);
-        scallingController.setScallingParams(30, 6, 50, 58, 65, stopDetecting_BT, calibrationFrame);
-        scallingController.setScallingParams(30, 6, 50, 65, 65, resetBind_BT, calibrationFrame);
-        scallingController.setScallingParams(50, 6, 50, 54, 10, cfgActivationValue_LB, calibrationFrame);
-        scallingController.setScallingParams(30, 10, 40, 75, 34, saveCfg_BT, calibrationFrame);
-        cfgBindPageNumber_LB.setHorizontalAlignment(SwingConstants.CENTER);
+    @Override
+    public void setGuiIcon() {
+        try {
+            ImageIcon icon = new ImageIcon(ImageIO.read(this.getClass().getResourceAsStream("/images/AppImage.png")));
+            this.setIconImage(icon.getImage());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     //default config values into conrols
@@ -138,9 +134,9 @@ public class CalibrationWindow implements WindowInterface {
     // sets detected values
     private void updateDetectedValues() {
         try {
-            detectedControl_LB.setText("detected: " + currentConfigPanel.getBindsArray().get(bindIndex).getControlId());
-            cfgActivationValue_LB.setText("Activation From: " + currentConfigPanel.getBindActivationValueArray().get(bindIndex).getValueMin()
-                    + " To: " + currentConfigPanel.getBindActivationValueArray().get(bindIndex).getValueMax());
+            detectedControl_LB.setText("detected: " + currentConfigPanel.getBind().get(bindIndex).getControlId());
+            cfgActivationValue_LB.setText("Activation From: " + currentConfigPanel.getActivationValue().get(bindIndex).getValueMin()
+                    + " To: " + currentConfigPanel.getActivationValue().get(bindIndex).getValueMax());
         } catch (Exception e) {
             detectedControl_LB.setText("detected: ");
             cfgActivationValue_LB.setText("Activation_value: ");
@@ -150,15 +146,15 @@ public class CalibrationWindow implements WindowInterface {
     // mouse click event listener
     private void setMouseClickListener(java.awt.Component component) {
         component.addMouseListener(new MouseListener() {
-
             @Override
             public void mouseClicked(MouseEvent e) {
                 java.awt.Component component = (java.awt.Component) e.getSource();
                 if (e.getClickCount() == 1 && !e.isConsumed() && component.isEnabled()) {
+
                     if (component == saveCfg_BT) {
                         saveConfigValues(currentConfigPanel);
-                        calibrationFrame.dispose();
-                        mainWindowController.updateConfigPanelName();
+                        CalibrationGUI.this.dispose();
+                        CentralGUI.updateConfigPanelName();
                     }
 
                     if (component == detectMin_BT) {
@@ -169,7 +165,7 @@ public class CalibrationWindow implements WindowInterface {
                         }
                         catch (Exception ex)
                         {
-                            JOptionPane.showConfirmDialog(calibrationFrame,"Gamepad not set correctly!","Warning!", JOptionPane.DEFAULT_OPTION);
+                            JOptionPane.showConfirmDialog(CalibrationGUI.this,"Gamepad not set correctly!","Warning!", JOptionPane.DEFAULT_OPTION);
                             detectMin_BT.setEnabled(true);
                         }
                     }
@@ -180,7 +176,7 @@ public class CalibrationWindow implements WindowInterface {
                             final int VALUE_MAX = 1;
                             setBindActivationRange(VALUE_MAX);
                         } catch (Exception ex) {
-                            JOptionPane.showConfirmDialog(calibrationFrame, "Gamepad not set correctly!", "Warning!", JOptionPane.DEFAULT_OPTION);
+                            JOptionPane.showConfirmDialog(CalibrationGUI.this, "Gamepad not set correctly!", "Warning!", JOptionPane.DEFAULT_OPTION);
                             detectMax_BT.setEnabled(true);
                         }
                     }
@@ -201,7 +197,7 @@ public class CalibrationWindow implements WindowInterface {
                     }
 
                     if (component == nextBind_BT) {
-                        if(currentConfigPanel.getBindsArray().size() > bindIndex) {
+                        if(currentConfigPanel.getBind().size() > bindIndex) {
                             goToNextBind();
                         }
                     }
@@ -243,45 +239,45 @@ public class CalibrationWindow implements WindowInterface {
 
     private void setBindActivationRange(int valueIndex) {
         detectingStatus = CalibrationStatusEnum.DETECTING;
-        Controller controller = gamepadController.getGamepadByName(profileController.getCurrentUsingProfile().getGamepadName());
-        detectGamepadControl(controller);
+        Controller controller = gamepadController.getGamepadByName(Profile.getInstance().getGamepadName());
+        detectControl(controller);
         calibrateActivationRange(controller, valueIndex);
     }
 
     //detects pressed control
-    private void detectGamepadControl(Controller controller) {
+    private void detectControl(Controller controller) {
         Component detectedControl = gamepadController.getDetectedGamepadControl(controller);
-        if (currentConfigPanel.getBindsArray().size() <= bindIndex) {
-            currentConfigPanel.getBindsArray().add(new Gamepad());
+        if (currentConfigPanel.getBind().size() <= bindIndex) {
+            currentConfigPanel.getBind().add(new Gamepad());
         }
-        currentConfigPanel.getBindsArray().get(bindIndex).setControlId(detectedControl.getIdentifier().toString());
-        detectedControl_LB.setText("detected: " + currentConfigPanel.getBindsArray().get(bindIndex).getControlId());
+        currentConfigPanel.getBind().get(bindIndex).setControlId(detectedControl.getIdentifier().toString());
+        detectedControl_LB.setText("detected: " + currentConfigPanel.getBind().get(bindIndex).getControlId());
     }
 
     //sets Activation range
     private void calibrateActivationRange(Controller controller,int valueIndex)
     {
-        if(currentConfigPanel.getBindActivationValueArray().size() <= bindIndex)
+        if(currentConfigPanel.getActivationValue().size() <= bindIndex)
         {
-            currentConfigPanel.getBindActivationValueArray().add(new Range(0,0));
+            currentConfigPanel.getActivationValue().add(new Range(0,0));
         }
         calibrateActivationValue(controller,valueIndex);
     }
 
     // calibrates control
     private void calibrateActivationValue(Controller controller, int valueIndex) {
-        Range activationRange = currentConfigPanel.getBindActivationValueArray().get(bindIndex);
+        Range activationRange = currentConfigPanel.getActivationValue().get(bindIndex);
         float[] value = {activationRange.getValueMin(),activationRange.getValueMax()};
         Thread thread = new Thread() {
             public void run() {
                 while (detectingStatus == CalibrationStatusEnum.DETECTING) {
-                    Component gamepadControl = currentConfigPanel.getBindsArray().get(bindIndex).getControlByName(controller, currentConfigPanel.getBindsArray().get(bindIndex).getControlId());
-                    String gamepadName = profileController.getCurrentUsingProfile().getGamepadName();
+                    Component gamepadControl = currentConfigPanel.getBind().get(bindIndex).getControlByName(controller, currentConfigPanel.getBind().get(bindIndex).getControlId());
+                    String gamepadName = Profile.getInstance().getGamepadName();
                     Controller gamepad = gamepadController.getGamepadByName(gamepadName);
                     value[valueIndex] = gamepadController.getControlValue(gamepad, gamepadControl);
                     cfgActivationValue_LB.setText("Activation From: " + value[0] + " To: " + value[1]);
                 }
-                currentConfigPanel.getBindActivationValueArray().set(bindIndex,new Range(value[0],value[1]));
+                currentConfigPanel.getActivationValue().set(bindIndex,new Range(value[0],value[1]));
             }
         };
 
@@ -297,8 +293,8 @@ public class CalibrationWindow implements WindowInterface {
 
     private void removeBindFromConfig(ConfigPanel cfgPanel)
     {
-        if(!cfgPanel.getBindsArray().isEmpty()) {
-            cfgPanel.getBindsArray().remove(bindIndex);
+        if(!cfgPanel.getBind().isEmpty()) {
+            cfgPanel.getBind().remove(bindIndex);
         }
         updateDetectedValues();
     }

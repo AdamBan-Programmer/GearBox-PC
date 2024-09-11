@@ -1,5 +1,7 @@
 package org.example.Utils;
 
+import lombok.Getter;
+import lombok.Setter;
 import net.java.games.input.*;
 
 
@@ -7,8 +9,12 @@ import java.io.Serializable;
 import java.text.NumberFormat;
 import java.util.Locale;
 
+@Getter
+@Setter
 public class Gamepad implements Serializable{
+
     private static final long serialVersionUID = -5784725879521831210L;
+
     private String controlId;
     public Gamepad()
     {
@@ -50,12 +56,12 @@ public class Gamepad implements Serializable{
     }
 
     //returns Component by name
-    public Component getControlByName(Controller controller, String id)
+    public Component getControlByName(Controller controller, String name)
     {
         Component[] components = controller.getComponents();
         for(Component component : components)
         {
-            if(component.getIdentifier().toString().equals(id))
+            if(component.getIdentifier().toString().equals(name))
             {
                 return component;
             }
@@ -105,12 +111,5 @@ public class Gamepad implements Serializable{
             }
         }
         return null;
-    }
-    public String getControlId() {
-        return this.controlId;
-    }
-
-    public void setControlId(String controlId) {
-        this.controlId = controlId;
     }
 }

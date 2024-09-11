@@ -1,7 +1,11 @@
 package org.example.Utils;
 
-import java.io.Serializable;
+import lombok.Getter;
+import lombok.Setter;
 
+import java.io.Serializable;
+@Getter
+@Setter
 public class Range implements Serializable {
 
     private float valueMin;
@@ -12,19 +16,8 @@ public class Range implements Serializable {
         this.valueMax = valueMax;
     }
 
-    public Range() {
-    }
-
-    public boolean isInRange(float value,Range range)
+    public boolean isInRange(float value)
     {
-        return (value >= range.getValueMin() && value <= range.getValueMax());
-    }
-
-    public float getValueMin() {
-        return this.valueMin;
-    }
-
-    public float getValueMax() {
-        return this.valueMax;
+        return (value >= this.getValueMin() && value <= this.getValueMax());
     }
 }

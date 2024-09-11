@@ -7,8 +7,6 @@ import java.io.*;
 
 public class MemoryOperations implements Serializable {
 
-    private static Profile profilesController = new Profile();
-    private static AppSettings appSettingsController = new AppSettings();
     private static final long serialVersionUID = -7889730748737034949L;
 
     private static final String SAVE_PATH = "C:/";
@@ -49,7 +47,7 @@ public class MemoryOperations implements Serializable {
             for (File file : serialized_profiles) {
                 FileInputStream streamIn = new FileInputStream(file);
                 ObjectInputStream object_input_stream = new ObjectInputStream(streamIn);
-                profilesController.getProfilesArray().add((Profile) object_input_stream.readObject());
+                Profile.getProfilesArray().add((Profile) object_input_stream.readObject());
                 streamIn.close();
             }
         }
@@ -62,7 +60,7 @@ public class MemoryOperations implements Serializable {
         if (serialized_settings.length > 0) {
             FileInputStream streamIn = new FileInputStream(serialized_settings[0]);
             ObjectInputStream objectInputStream = new ObjectInputStream(streamIn);
-            appSettingsController.setCurrentAppSettings((AppSettings) objectInputStream.readObject());
+            AppSettings.loadSettings((AppSettings) objectInputStream.readObject());
         }
     }
 

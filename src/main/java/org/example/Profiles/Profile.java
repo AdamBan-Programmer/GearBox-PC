@@ -1,5 +1,7 @@
 package org.example.Profiles;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.example.Configs.ConfigPanel;
 import org.example.File.MemoryOperations;
 
@@ -8,10 +10,13 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Profile implements Serializable {
+@Getter
+@Setter
+public final class Profile implements Serializable {
 
     static MemoryOperations memoryController = new MemoryOperations();
     private static final long serialVersionUID = -7889730748737034949L;
+
     private String name;
     private ArrayList<ConfigPanel> configPanels;
     private String gamepadName;
@@ -22,30 +27,25 @@ public class Profile implements Serializable {
     //current profile
     private static Profile currentUsingProfile;
 
-    public Profile(String name,ArrayList<ConfigPanel> configPanels,String gamepadName)
+    private Profile(String name,ArrayList<ConfigPanel> configPanels,String gamepadName)
     {
         this.name = name;
         this.configPanels = configPanels;
         this.gamepadName = gamepadName;
     }
 
-    public Profile()
-    {
-    }
-
     //creates new profile
-    public void createNewProfile()
+    public static void createNewProfile()
     {
-        Profile newProfile = new Profile("",new ArrayList<ConfigPanel>(),null);
-        setCurrentUsingProfile(newProfile);
+        currentUsingProfile = new Profile("",new ArrayList<ConfigPanel>(),null);
     }
 
-    public void setProfileNameRequest() throws NullPointerException
+    public static void setProfileNameRequest() throws NullPointerException
     {
         String newProfileName = (String) JOptionPane.showInputDialog(null, "Set profile name.", "Warning!"
                 ,JOptionPane.PLAIN_MESSAGE, null, null,null);
         if(newProfileName != null) {
-            getCurrentUsingProfile().setName(newProfileName);
+            currentUsingProfile.setName(newProfileName);
         }
         else
         {
@@ -53,22 +53,22 @@ public class Profile implements Serializable {
         }
     }
 
-    public void renameProfileRequest(String message)
+    public static void renameProfileRequest(String message)
     {
-        String profileName = getCurrentUsingProfile().getName();
+        String profileName = getInstance().getName();
         String newProfileName = (String) JOptionPane.showInputDialog(null, message, "Warning!"
                 ,JOptionPane.PLAIN_MESSAGE, null, null,profileName );
         if(newProfileName.isEmpty() || newProfileName == null)
         {
-            getCurrentUsingProfile().setName("");
+            currentUsingProfile.setName("");
         }
         else {
-            getCurrentUsingProfile().setName(newProfileName);
+            currentUsingProfile.setName(newProfileName);
         }
     }
 
     //saves profile
-    public void saveProfile() throws IOException, ClassNotFoundException {
+    public static void saveProfile() throws IOException, ClassNotFoundException {
         String pathToFile = "/GearBoxBinder/Profiles/" + currentUsingProfile.getName() + ".ser";
         profilesList.add(currentUsingProfile);
         memoryController.serializeObject(pathToFile,currentUsingProfile);
@@ -76,16 +76,26 @@ public class Profile implements Serializable {
     }
 
     //removes profile
-    public void removeProfile(int index)
+    public static void removeProfile(int index)
     {
         if(index >= 0) {
             memoryController.removeFile(index);
         }
-        getProfilesArray().remove(index);
+        profilesList.remove(index);
+    }
+
+    public static void changeProfile(Profile newProfile)
+    {
+        currentUsingProfile = newProfile;
+    }
+
+    public static void clearCurrentProfile()
+    {
+        currentUsingProfile = null;
     }
 
     //returns current using profile
-    public Profile getCurrentUsingProfile()
+    public static Profile getInstance()
     {
         if(currentUsingProfile == null)
         {
@@ -94,37 +104,8 @@ public class Profile implements Serializable {
         return currentUsingProfile;
     }
 
-    //sets current using profile
-    public void setCurrentUsingProfile(Profile profile)
+    public static ArrayList<Profile> getProfilesArray()
     {
-        currentUsingProfile = profile;
-    }
-
-    public String getName() {
-        return this.name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public ArrayList<Profile> getProfilesArray() {
         return profilesList;
-    }
-
-    public ArrayList<ConfigPanel> getConfigPanels() {
-        return this.configPanels;
-    }
-
-    public void setConfigPanels(ArrayList<ConfigPanel> configPanels) {
-        this.configPanels = configPanels;
-    }
-
-    public String getGamepadName() {
-        return this.gamepadName;
-    }
-
-    public void setGamepadName(String gamepad) {
-        this.gamepadName = gamepad;
     }
 }

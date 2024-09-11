@@ -1,5 +1,7 @@
 package org.example.Configs;
 
+import lombok.Getter;
+import lombok.Setter;
 import net.java.games.input.Controller;
 import org.example.Profiles.Profile;
 import org.example.Utils.Gamepad;
@@ -9,11 +11,11 @@ import java.awt.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+@Getter
+@Setter
 public class ConfigPanel extends Config implements Serializable {
 
     static Gamepad gamepadController = new Gamepad();
-    static Range rangeController = new Range();
-    static Profile profilesController = new Profile();
 
     private String name;
     int posX;
@@ -35,15 +37,16 @@ public class ConfigPanel extends Config implements Serializable {
     // checks that config is activated
     public boolean isConfigActivated(ConfigPanel cfgPanel)
     {
-        int bindsAmount = cfgPanel.getBindsArray().size();
+        int bindsAmount = cfgPanel.getBind().size();
         if(bindsAmount > 0) {
             for (int i = 0; i < bindsAmount; i++) {
-                Controller controller = gamepadController.getGamepadByName(profilesController.getCurrentUsingProfile().getGamepadName());
-                net.java.games.input.Component control = cfgPanel.getBindsArray().get(i).getControlByName(controller, cfgPanel.getBindsArray().get(i).getControlId());
+                Controller controller = gamepadController.getGamepadByName(Profile.getInstance().getGamepadName());
+                net.java.games.input.Component control = cfgPanel.getBind().get(i).getControlByName(controller, cfgPanel.getBind().get(i).getControlId());
 
+                Range activation = cfgPanel.getActivationValue().get(i);
                 float value = gamepadController.getControlValue(controller, control);
-                float valueMin = cfgPanel.getBindActivationValueArray().get(i).getValueMin();
-                float valueMax = cfgPanel.getBindActivationValueArray().get(i).getValueMax();
+                float valueMin = activation.getValueMin();
+                float valueMax = activation.getValueMax();
 
                 if (valueMin > valueMax) {
                     float min = valueMax;
@@ -52,7 +55,8 @@ public class ConfigPanel extends Config implements Serializable {
                     valueMin = min;
                 }
 
-                if (!rangeController.isInRange(value, new Range(valueMin, valueMax))) {
+                Range range = new Range(valueMin, valueMax);
+                if (!range.isInRange(value)) {
                     return false;
                 }
             }
@@ -60,32 +64,4 @@ public class ConfigPanel extends Config implements Serializable {
         }
         return false;
     }
-
-    public String getName() {
-        return this.name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getPosX() {
-        return this.posX;
-    }
-
-    public void setPosX(int posX) {
-        this.posX = posX;
-    }
-
-    public int getPosY() {
-        return this.posY;
-    }
-
-    public void setPosY(int posY) {
-        this.posY = posY;
-    }
-
-    public Point getSelectedPoint() {return this.selectedPoint;}
-
-    public void setSelectedPoint(Point selectedPoint) {this.selectedPoint = selectedPoint;}
 }
