@@ -48,7 +48,7 @@ sourceSets {
 
 jar {
     manifest {
-        attributes 'Main-Class': 'org.example.MainWindow'
+        attributes 'Main-Class': 'org.example.Main.Main'
     }
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     exclude 'META-INF/*.RSA', 'META-INF/*.SF','META-INF/*.DSA'
