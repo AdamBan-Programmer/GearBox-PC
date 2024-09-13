@@ -12,14 +12,16 @@ import org.example.Utils.ScaleLayout;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
 
-public class CalibrationGUI extends JDialog implements CreatorGUI {
+public class CalibrationGUI extends JDialog implements CreatorGUI,CloseGUI {
 
     static ScaleLayout scallingController = new ScaleLayout();
     static Gamepad gamepadController = new Gamepad();
 
+    static JPanel calibrationPanel = new JPanel();
+
+    static JButton removeBT = new JButton("REMOVE");
     static JLabel cfgName_LB = new JLabel("Set name of config");
     static JTextField cfgName_TF = new JTextField();
     static JLabel cfgValue_LB = new JLabel("Set value");
@@ -62,56 +64,65 @@ public class CalibrationGUI extends JDialog implements CreatorGUI {
         this.setTitle("Config:");
         this.setLocationRelativeTo(null);
         this.setLayout(null);
-        this.getContentPane().setBackground(Color.decode("#C0C0C0"));
+        calibrationPanel.setBackground(Color.decode("#C0C0C0"));
+        calibrationPanel.setLayout(null);
     }
 
     @Override
     public void setGuiComponentsParams() {
-        scallingController.setScallingParams(78, 6, 50, 5, 2, cfgName_LB, this);
-        scallingController.setScallingParams(78, 6, 70, 11, 2, cfgName_TF, this);
-        scallingController.setScallingParams(78, 6, 50, 18, 2, cfgValue_LB, this);
-        scallingController.setScallingParams(78, 6, 70, 24, 2, cfgValue_TF, this);
-        scallingController.setScallingParams(50, 6, 50, 48, 10, detectedControl_LB, this);
-        scallingController.setScallingParams(20, 7, 60, 35, 20, cfgBindPageNumber_LB, this);
-        scallingController.setScallingParams(15, 6, 50, 35, 5, previousBind_BT, this);
-        scallingController.setScallingParams(15, 6, 50, 35, 40, nextBind_BT, this);
-        scallingController.setScallingParams(30, 6, 50, 44, 65, detectMin_BT, this);
-        scallingController.setScallingParams(30, 6, 50, 51, 65, detectMax_BT, this);
-        scallingController.setScallingParams(30, 6, 50, 58, 65, stopDetecting_BT, this);
-        scallingController.setScallingParams(30, 6, 50, 65, 65, resetBind_BT, this);
-        scallingController.setScallingParams(50, 6, 50, 54, 10, cfgActivationValue_LB, this);
-        scallingController.setScallingParams(30, 10, 40, 75, 34, saveCfg_BT, this);
+        scallingController.setScallingParams(100,100,0,0,0,calibrationPanel,this);
+
+        scallingController.setScallingParams(20, 6, 50, 1, 75, removeBT, calibrationPanel);
+        scallingController.setScallingParams(78, 6, 50, 5, 2, cfgName_LB, calibrationPanel);
+        scallingController.setScallingParams(78, 6, 70, 11, 2, cfgName_TF, calibrationPanel);
+        scallingController.setScallingParams(78, 6, 50, 18, 2, cfgValue_LB, calibrationPanel);
+        scallingController.setScallingParams(78, 6, 70, 24, 2, cfgValue_TF, calibrationPanel);
+        scallingController.setScallingParams(50, 6, 50, 48, 10, detectedControl_LB, calibrationPanel);
+        scallingController.setScallingParams(20, 7, 60, 35, 20, cfgBindPageNumber_LB, calibrationPanel);
+        scallingController.setScallingParams(15, 6, 50, 35, 5, previousBind_BT, calibrationPanel);
+        scallingController.setScallingParams(15, 6, 50, 35, 40, nextBind_BT, calibrationPanel);
+        scallingController.setScallingParams(30, 6, 50, 44, 65, detectMin_BT, calibrationPanel);
+        scallingController.setScallingParams(30, 6, 50, 51, 65, detectMax_BT, calibrationPanel);
+        scallingController.setScallingParams(30, 6, 50, 58, 65, stopDetecting_BT, calibrationPanel);
+        scallingController.setScallingParams(30, 6, 50, 65, 65, resetBind_BT, calibrationPanel);
+        scallingController.setScallingParams(50, 6, 50, 54, 10, cfgActivationValue_LB, calibrationPanel);
+        scallingController.setScallingParams(30, 10, 40, 75, 34, saveCfg_BT, calibrationPanel);
         cfgBindPageNumber_LB.setHorizontalAlignment(SwingConstants.CENTER);
+        removeBT.setBackground(Color.decode("#e8354d"));
     }
 
     @Override
     public void addGuiComponents() {
         //adds controls into panel
-        this.add(cfgName_LB);
-        this.add(cfgName_TF);
-        this.add(cfgValue_LB);
-        this.add(cfgValue_TF);
-        this.add(detectedControl_LB);
-        this.add(detectMin_BT);
-        this.add(detectMax_BT);
-        this.add(resetBind_BT);
-        this.add(stopDetecting_BT);
-        this.add(cfgActivationValue_LB);
-        this.add(previousBind_BT);
-        this.add(nextBind_BT);
-        this.add(cfgBindPageNumber_LB);
-        this.add(saveCfg_BT);
+        calibrationPanel.add(removeBT);
+        calibrationPanel.add(cfgName_LB);
+        calibrationPanel.add(cfgName_TF);
+        calibrationPanel.add(cfgValue_LB);
+        calibrationPanel.add(cfgValue_TF);
+        calibrationPanel.add(detectedControl_LB);
+        calibrationPanel.add(detectMin_BT);
+        calibrationPanel.add(detectMax_BT);
+        calibrationPanel.add(resetBind_BT);
+        calibrationPanel.add(stopDetecting_BT);
+        calibrationPanel.add(cfgActivationValue_LB);
+        calibrationPanel.add(previousBind_BT);
+        calibrationPanel.add(nextBind_BT);
+        calibrationPanel.add(cfgBindPageNumber_LB);
+        calibrationPanel.add(saveCfg_BT);
+
+        this.add(calibrationPanel);
     }
 
     @Override
     public void addGuiComponentsToListeners() {
-        setMouseClickListener(previousBind_BT);
-        setMouseClickListener(nextBind_BT);
-        setMouseClickListener(detectMin_BT);
-        setMouseClickListener(detectMax_BT);
-        setMouseClickListener(stopDetecting_BT);
-        setMouseClickListener(resetBind_BT);
-        setMouseClickListener(saveCfg_BT);
+        removeBT.addActionListener(actionListener);
+        previousBind_BT.addActionListener(actionListener);
+        nextBind_BT.addActionListener(actionListener);
+        detectMin_BT.addActionListener(actionListener);
+        detectMax_BT.addActionListener(actionListener);
+        stopDetecting_BT.addActionListener(actionListener);
+        resetBind_BT.addActionListener(actionListener);
+        saveCfg_BT.addActionListener(actionListener);
     }
     @Override
     public void setGuiIcon() {
@@ -121,6 +132,20 @@ public class CalibrationGUI extends JDialog implements CreatorGUI {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+    @Override
+    public void closeGui()
+    {
+        for(java.awt.Component component : calibrationPanel.getComponents())
+        {
+            if(component instanceof JButton)
+            {
+                JButton actionBT = (JButton) component;
+                actionBT.removeActionListener(actionListener);
+            }
+        }
+        this.remove(calibrationPanel);
+        this.dispose();
     }
 
     //default config values into conrols
@@ -144,84 +169,70 @@ public class CalibrationGUI extends JDialog implements CreatorGUI {
     }
 
     // mouse click event listener
-    private void setMouseClickListener(java.awt.Component component) {
-        component.addMouseListener(new MouseListener() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                java.awt.Component component = (java.awt.Component) e.getSource();
-                if (e.getClickCount() == 1 && !e.isConsumed() && component.isEnabled()) {
+    ActionListener actionListener = new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            java.awt.Component component = (java.awt.Component) e.getSource();
 
-                    if (component == saveCfg_BT) {
-                        saveConfigValues(currentConfigPanel);
-                        CalibrationGUI.this.dispose();
-                        CentralGUI.updateConfigPanelName();
-                    }
+            if(component == removeBT)
+            {
+                CentralGUI.removeConfigPanel(currentConfigPanel);
+                closeGui();
+            }
 
-                    if (component == detectMin_BT) {
-                        try {
-                            detectMin_BT.setEnabled(false);
-                            final int VALUE_MIN = 0;
-                            setBindActivationRange(VALUE_MIN);
-                        }
-                        catch (Exception ex)
-                        {
-                            JOptionPane.showConfirmDialog(CalibrationGUI.this,"Gamepad not set correctly!","Warning!", JOptionPane.DEFAULT_OPTION);
-                            detectMin_BT.setEnabled(true);
-                        }
-                    }
+            if (component == saveCfg_BT) {
+                saveConfigValues(currentConfigPanel);
+                CentralGUI.updateConfigPanelName();
+                closeGui();
+            }
 
-                    if (component == detectMax_BT) {
-                        try {
-                            detectMax_BT.setEnabled(false);
-                            final int VALUE_MAX = 1;
-                            setBindActivationRange(VALUE_MAX);
-                        } catch (Exception ex) {
-                            JOptionPane.showConfirmDialog(CalibrationGUI.this, "Gamepad not set correctly!", "Warning!", JOptionPane.DEFAULT_OPTION);
-                            detectMax_BT.setEnabled(true);
-                        }
-                    }
-
-                    if (component == stopDetecting_BT) {
-                        detectingStatus = CalibrationStatusEnum.STOPPED;
+            if (component == detectMin_BT) {
+                if(detectingStatus == CalibrationStatusEnum.STOPPED) {
+                    try {
+                        detectMin_BT.setEnabled(false);
+                        final int VALUE_MIN = 0;
+                        setBindActivationRange(VALUE_MIN);
+                    } catch (Exception ex) {
+                        JOptionPane.showConfirmDialog(CalibrationGUI.this, "Gamepad not set correctly!", "Warning!", JOptionPane.DEFAULT_OPTION);
                         detectMin_BT.setEnabled(true);
-                        detectMax_BT.setEnabled(true);
                     }
-
-                    if(component == resetBind_BT)
-                    {
-                        removeBindFromConfig(currentConfigPanel);
-                    }
-
-                    if (component == previousBind_BT) {
-                        goToPreviousBind();
-                    }
-
-                    if (component == nextBind_BT) {
-                        if(currentConfigPanel.getBind().size() > bindIndex) {
-                            goToNextBind();
-                        }
-                    }
-                    e.consume();
                 }
             }
 
-            @Override
-            public void mousePressed(MouseEvent e) {
+            if (component == detectMax_BT) {
+                if(detectingStatus == CalibrationStatusEnum.STOPPED) {
+                    try {
+                        detectMax_BT.setEnabled(false);
+                        final int VALUE_MAX = 1;
+                        setBindActivationRange(VALUE_MAX);
+                    } catch (Exception ex) {
+                        JOptionPane.showConfirmDialog(CalibrationGUI.this, "Gamepad not set correctly!", "Warning!", JOptionPane.DEFAULT_OPTION);
+                        detectMax_BT.setEnabled(true);
+                    }
+                }
             }
 
-            @Override
-            public void mouseReleased(MouseEvent e) {
+            if (component == stopDetecting_BT) {
+                detectingStatus = CalibrationStatusEnum.STOPPED;
+                detectMin_BT.setEnabled(true);
+                detectMax_BT.setEnabled(true);
             }
 
-            @Override
-            public void mouseEntered(MouseEvent e) {
+            if (component == resetBind_BT) {
+                removeBindFromConfig(currentConfigPanel);
             }
 
-            @Override
-            public void mouseExited(MouseEvent e) {
+            if (component == previousBind_BT) {
+                goToPreviousBind();
             }
-        });
-    }
+
+            if (component == nextBind_BT) {
+                if (currentConfigPanel.getBind().size() > bindIndex) {
+                    goToNextBind();
+                }
+            }
+        }
+    };
 
     private void goToPreviousBind() {
         if (bindIndex > 0) {

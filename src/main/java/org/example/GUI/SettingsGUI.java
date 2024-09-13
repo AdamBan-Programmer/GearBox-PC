@@ -6,15 +6,19 @@ import org.example.Utils.ScaleLayout;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 
-public class SettingsGUI extends JDialog implements CreatorGUI {
+public class SettingsGUI extends JDialog implements CreatorGUI,CloseGUI {
 
     private static ScaleLayout scallingController = new ScaleLayout();
     private static MemoryOperations memoryController = new MemoryOperations();
+
+    JPanel settingsPanel = new JPanel();
 
     static JLabel saveDirectoryPath_LB = new JLabel("app directory: C:/GearBoxBinder");
     static JTextField etsPath_TF = new JTextField();
@@ -41,31 +45,36 @@ public class SettingsGUI extends JDialog implements CreatorGUI {
         this.setResizable(false);
         this.setTitle("appSettings:");
         this.setLayout(null);
-        this.getContentPane().setBackground(Color.decode("#C0C0C0"));
+        settingsPanel.setLayout(null);
+        settingsPanel.setBackground(Color.decode("#C0C0C0"));
     }
 
     @Override
     public void setGuiComponentsParams() {
-        scallingController.setScallingParams(70, 5, 70, 5, 5, saveDirectoryPath_LB, this);
-        scallingController.setScallingParams(70, 5, 65, 15, 5, etsPath_LB, this);
-        scallingController.setScallingParams(70, 7, 50, 20, 5, etsPath_TF, this);
-        scallingController.setScallingParams(70, 7, 50, 30, 5, openAppFiles_BT, this);
-        scallingController.setScallingParams(30, 10, 50, 70, 35, save_BT, this);
+        scallingController.setScallingParams(100,100,0,0,0,settingsPanel,this);
+
+        scallingController.setScallingParams(70, 5, 70, 5, 5, saveDirectoryPath_LB, settingsPanel);
+        scallingController.setScallingParams(70, 5, 65, 15, 5, etsPath_LB, settingsPanel);
+        scallingController.setScallingParams(70, 7, 50, 20, 5, etsPath_TF, settingsPanel);
+        scallingController.setScallingParams(70, 7, 50, 30, 5, openAppFiles_BT, settingsPanel);
+        scallingController.setScallingParams(30, 10, 50, 70, 35, save_BT, settingsPanel);
     }
 
     @Override
     public void addGuiComponents() {
-        this.getContentPane().add(saveDirectoryPath_LB);
-        this.getContentPane().add(etsPath_TF);
-        this.getContentPane().add(etsPath_LB);
-        this.getContentPane().add(openAppFiles_BT);
-        this.getContentPane().add(save_BT);
+        settingsPanel.add(saveDirectoryPath_LB);
+        settingsPanel.add(etsPath_TF);
+        settingsPanel.add(etsPath_LB);
+        settingsPanel.add(openAppFiles_BT);
+        settingsPanel.add(save_BT);
+
+        this.add(settingsPanel);
     }
 
     @Override
     public void addGuiComponentsToListeners() {
-        setMouseClickListener(openAppFiles_BT);
-        setMouseClickListener(save_BT);
+        openAppFiles_BT.addActionListener(actionListener);
+        save_BT.addActionListener(actionListener);
     }
     @Override
     public void setGuiIcon() {
@@ -77,64 +86,51 @@ public class SettingsGUI extends JDialog implements CreatorGUI {
         }
     }
 
+    @Override
+    public void closeGui() {
+        for(java.awt.Component component : settingsPanel.getComponents())
+        {
+            if(component instanceof JButton)
+            {
+                JButton actionBT = (JButton) component;
+                actionBT.removeActionListener(actionListener);
+            }
+        }
+        this.remove(settingsPanel);
+        this.dispose();
+    }
+
     private void setValuesIntoControls()
     {
         etsPath_TF.setText(AppSettings.getInstance().getEtsPath());
     }
 
-    private void setMouseClickListener(Component component) {
-        component.addMouseListener(new MouseListener() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                Component component = (Component) e.getSource();
+    ActionListener actionListener = new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            Component component = (Component) e.getSource();
 
-                if(component == openAppFiles_BT)
-                {
-                    try {
-                        Runtime.getRuntime().exec("explorer.exe /select," + "C:\\GearBoxBinder\\Profiles");
-                    }
-                    catch (IOException ex) {
-                        JOptionPane.showConfirmDialog(SettingsGUI.this,"Error! Cannot open app files.","Error!", JOptionPane.DEFAULT_OPTION);
-                    }
+            if (component == openAppFiles_BT) {
+                try {
+                    Runtime.getRuntime().exec("explorer.exe /select," + "C:\\GearBoxBinder\\Profiles");
+                } catch (IOException ex) {
+                    JOptionPane.showConfirmDialog(SettingsGUI.this, "Error! Cannot open app files.", "Error!", JOptionPane.DEFAULT_OPTION);
                 }
-
-                 if(component == save_BT)
-                 {
-                     try {
-                         getDataFromControls();
-                         memoryController.checkAllDirectoriesExist();
-                         String pathToFile = "GearBoxBinder/Settings/Settings.ser";
-                         memoryController.serializeObject(pathToFile, AppSettings.getInstance());
-                         SettingsGUI.this.dispose();
-                     }
-                     catch (IOException ioe)
-                     {
-                         JOptionPane.showConfirmDialog(SettingsGUI.this,"Error! Cannot save your settings.","Error!", JOptionPane.DEFAULT_OPTION);
-                     }
-                 }
             }
 
-            @Override
-            public void mousePressed(MouseEvent e) {
-
+            if (component == save_BT) {
+                try {
+                    getDataFromControls();
+                    memoryController.checkAllDirectoriesExist();
+                    String pathToFile = "GearBoxBinder/Settings/Settings.ser";
+                    memoryController.serializeObject(pathToFile, AppSettings.getInstance());
+                    SettingsGUI.this.dispose();
+                } catch (IOException ioe) {
+                    JOptionPane.showConfirmDialog(SettingsGUI.this, "Error! Cannot save your settings.", "Error!", JOptionPane.DEFAULT_OPTION);
+                }
             }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-
-            }
-        });
-    }
+        }
+    };
 
     private void getDataFromControls()
     {

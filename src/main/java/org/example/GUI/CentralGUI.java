@@ -425,14 +425,7 @@ public class CentralGUI extends JFrame implements CreatorGUI{
                         });
                         return;
                     }
-
-                    if (e.getSource() instanceof JButton) {
-                        if (e.getClickCount() == 2) {
-                            removeConfigFromProfile((JButton) e.getSource());
-                        } else {
-                            showConfigSettings((JButton) e.getSource());
-                        }
-                    }
+                    showConfigSettings((JButton) component);
                 }
             }
 
@@ -569,14 +562,13 @@ public class CentralGUI extends JFrame implements CreatorGUI{
     }
 
     // removes config button and all config
-    private void removeConfigFromProfile(JButton btn)
+    private static void removeConfigFromProfile(JButton btn)
     {
         ConfigPanel cfgPanel = configHashMap.get(btn);
         configHashMap.remove(btn);
         configButtonsView.remove(btn);
         Profile.getInstance().getConfigPanels().remove(cfgPanel);
         configButtonsView.repaint();
-        JOptionPane.showConfirmDialog(this,"removed: " + btn.getText() + " from " + Profile.getInstance().getName(),"Info message", JOptionPane.DEFAULT_OPTION);
     }
 
     //opens config_panel_window
@@ -763,15 +755,31 @@ public class CentralGUI extends JFrame implements CreatorGUI{
         }
     }
 
+    public static void removeConfigPanel(ConfigPanel configPanel)
+    {
+        for (Map.Entry<JButton, ConfigPanel> entry : configHashMap.entrySet()) {
+            JButton btn = entry.getKey();
+            ConfigPanel cfgPanel = entry.getValue();
+
+            if(cfgPanel.equals(configPanel))
+            {
+                removeConfigFromProfile(btn);
+                JOptionPane.showConfirmDialog(null,"removed: " + btn.getText() + " from " + Profile.getInstance().getName(),"Info message", JOptionPane.DEFAULT_OPTION);
+                return;
+            }
+        }
+    }
+
     //creates new config button
     private JButton createNewButton(float percentFromLeft, float percentFromTop, String btnName) {
         JButton newButton = new JButton(btnName);
         scallingController.setScallingParams(11, 8, 30, percentFromTop, percentFromLeft, newButton, configButtonsView);
         newButton.setBackground(Color.decode("#e3e3e3"));
-        if(!isComponentColliding(newButton, scallingController.convertPercentToPixels((int)percentFromLeft,configButtonsView.getWidth()), scallingController.convertPercentToPixels((int)percentFromTop,configButtonsView.getHeight()))) {
+        if (!isComponentColliding(newButton, scallingController.convertPercentToPixels((int) percentFromLeft, configButtonsView.getWidth()), scallingController.convertPercentToPixels((int) percentFromTop, configButtonsView.getHeight()))) {
             configButtonsView.add(newButton);
             setMouseClickListener(newButton);
             setMouseMovementListener(newButton);
+
             SwingUtilities.windowForComponent(newButton).repaint();
         }
         return newButton;

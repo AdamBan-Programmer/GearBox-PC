@@ -53,17 +53,16 @@ public final class Profile implements Serializable {
         }
     }
 
-    public static void renameProfileRequest(String message)
-    {
+    public static void renameProfileRequest(String message) {
         String profileName = getInstance().getName();
         String newProfileName = (String) JOptionPane.showInputDialog(null, message, "Warning!"
-                ,JOptionPane.PLAIN_MESSAGE, null, null,profileName );
-        if(newProfileName.isEmpty() || newProfileName == null)
-        {
-            currentUsingProfile.setName("");
-        }
-        else {
-            currentUsingProfile.setName(newProfileName);
+                , JOptionPane.PLAIN_MESSAGE, null, null, profileName);
+        if(newProfileName != null) {
+            if (newProfileName.isEmpty()) {
+                currentUsingProfile.setName("");
+            } else {
+                currentUsingProfile.setName(newProfileName);
+            }
         }
     }
 
