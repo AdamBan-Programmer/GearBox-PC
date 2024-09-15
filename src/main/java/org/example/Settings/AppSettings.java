@@ -10,24 +10,22 @@ import java.io.Serializable;
 @Setter
 public final class AppSettings implements Serializable {
 
+    private static AppSettings instance;
     private String etsPath;
-
-    private static AppSettings currentAppSettings = null;
-
     private AppSettings(String etsPath) {
         this.etsPath = etsPath;
     }
 
     public static void loadSettings(AppSettings newAppSettings)
     {
-        currentAppSettings = newAppSettings;
+        instance = newAppSettings;
     }
     public static AppSettings getInstance() {
 
-        if(currentAppSettings == null)
+        if(instance == null)
         {
-            currentAppSettings = new AppSettings("");
+            instance = new AppSettings("");
         }
-        return currentAppSettings;
+        return instance;
     }
 }

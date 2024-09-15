@@ -17,16 +17,13 @@ public final class Profile implements Serializable {
     static MemoryOperations memoryController = new MemoryOperations();
     private static final long serialVersionUID = -7889730748737034949L;
 
+    private static Profile instance;
     private String name;
     private ArrayList<ConfigPanel> configPanels;
     private String gamepadName;
 
     //profiles
     private static ArrayList<Profile> profilesList = new ArrayList<>();
-
-    //current profile
-    private static Profile currentUsingProfile;
-
     private Profile(String name,ArrayList<ConfigPanel> configPanels,String gamepadName)
     {
         this.name = name;
@@ -37,7 +34,7 @@ public final class Profile implements Serializable {
     //creates new profile
     public static void createNewProfile()
     {
-        currentUsingProfile = new Profile("",new ArrayList<ConfigPanel>(),null);
+        instance = new Profile("",new ArrayList<ConfigPanel>(),null);
     }
 
     public static void setProfileNameRequest() throws NullPointerException
@@ -45,7 +42,7 @@ public final class Profile implements Serializable {
         String newProfileName = (String) JOptionPane.showInputDialog(null, "Set profile name.", "Warning!"
                 ,JOptionPane.PLAIN_MESSAGE, null, null,null);
         if(newProfileName != null) {
-            currentUsingProfile.setName(newProfileName);
+            instance.setName(newProfileName);
         }
         else
         {
@@ -59,18 +56,18 @@ public final class Profile implements Serializable {
                 , JOptionPane.PLAIN_MESSAGE, null, null, profileName);
         if(newProfileName != null) {
             if (newProfileName.isEmpty()) {
-                currentUsingProfile.setName("");
+                instance.setName("");
             } else {
-                currentUsingProfile.setName(newProfileName);
+                instance.setName(newProfileName);
             }
         }
     }
 
     //saves profile
     public static void saveProfile() throws IOException, ClassNotFoundException {
-        String pathToFile = "/GearBoxBinder/Profiles/" + currentUsingProfile.getName() + ".ser";
-        profilesList.add(currentUsingProfile);
-        memoryController.serializeObject(pathToFile,currentUsingProfile);
+        String pathToFile = "/GearBoxBinder/Profiles/" + instance.getName() + ".ser";
+        profilesList.add(instance);
+        memoryController.serializeObject(pathToFile, instance);
         profilesList.clear();
     }
 
@@ -85,22 +82,22 @@ public final class Profile implements Serializable {
 
     public static void changeProfile(Profile newProfile)
     {
-        currentUsingProfile = newProfile;
+        instance = newProfile;
     }
 
     public static void clearCurrentProfile()
     {
-        currentUsingProfile = null;
+        instance = null;
     }
 
     //returns current using profile
     public static Profile getInstance()
     {
-        if(currentUsingProfile == null)
+        if(instance == null)
         {
-            currentUsingProfile = new Profile("",new ArrayList<ConfigPanel>(),null);
+            instance = new Profile("",new ArrayList<ConfigPanel>(),null);
         }
-        return currentUsingProfile;
+        return instance;
     }
 
     public static ArrayList<Profile> getProfilesArray()
